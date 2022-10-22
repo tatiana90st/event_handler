@@ -1,4 +1,4 @@
-#include <cassert>
+п»ї#include <cassert>
 #include "common.h"
 #include "elements.h"
 #include "event_handler.h"
@@ -40,10 +40,10 @@ void EventHandler::React(const Point click) {
 				}
 			}
 			else {
-				(*it)->OnClick(); //форма станет активной
-				forms_.front()->MakeUnactive(); //активная, наоборот, неактивной
-				forms_.push_front(*it); //поместим активную форму наверх списка
-				it = forms_.erase(it);//удалим активную из середины списка
+				(*it)->OnClick(); //С„РѕСЂРјР° СЃС‚Р°РЅРµС‚ Р°РєС‚РёРІРЅРѕР№
+				forms_.front()->MakeUnactive(); //Р°РєС‚РёРІРЅР°СЏ, РЅР°РѕР±РѕСЂРѕС‚, РЅРµР°РєС‚РёРІРЅРѕР№
+				forms_.push_front(*it); //РїРѕРјРµСЃС‚РёРј Р°РєС‚РёРІРЅСѓСЋ С„РѕСЂРјСѓ РЅР°РІРµСЂС… СЃРїРёСЃРєР°
+				it = forms_.erase(it);//СѓРґР°Р»РёРј Р°РєС‚РёРІРЅСѓСЋ РёР· СЃРµСЂРµРґРёРЅС‹ СЃРїРёСЃРєР°
 			}
 			break;
 		}

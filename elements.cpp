@@ -1,4 +1,4 @@
-#include <string>
+п»ї#include <string>
 #include <string_view>
 #include <iostream>
 #include <list>
@@ -56,7 +56,7 @@ void Form::OnClick() {
 	}
 }
 
-//можно добавить проверку за выход за границы формы
+//РјРѕР¶РЅРѕ РґРѕР±Р°РІРёС‚СЊ РїСЂРѕРІРµСЂРєСѓ Р·Р° РІС‹С…РѕРґ Р·Р° РіСЂР°РЅРёС†С‹ С„РѕСЂРјС‹
 void  Form::AddButton(int x, int y, int width, int height, bool visibility, uint16_t rotation, int pivotX, int pivotY) {
 	Button* button = new Button(x, y, width, height, buttons_count_, visibility, rotation, pivotX, pivotY, *this);
 	elements_on_form_.push_front(button);
@@ -87,7 +87,7 @@ bool  Form::IsActive() {
 }
 
 optional<Element*>  Form::CheckInsideElements(const Point click) {
-	//обратный порядок проверки!!!
+	//РѕР±СЂР°С‚РЅС‹Р№ РїРѕСЂСЏРґРѕРє РїСЂРѕРІРµСЂРєРё!!!
 	for (Element* element : elements_on_form_) {
 		if (element->CheckInside(click)) {
 			return element;

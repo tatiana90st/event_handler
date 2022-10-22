@@ -27,4 +27,4 @@ void NothingHappened(Point p, ostream& out);
 void ElementAction(string_view form_name, int form_id, string_view element_name, int element_id, ostream& out);
 
 void EmptySpace(Point p, ostream& out);
-}
+}//namespace print

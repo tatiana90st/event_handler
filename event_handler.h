@@ -1,4 +1,4 @@
-#pragma once
+п»ї#pragma once
 #include <list>
 #include "common.h"
 #include "elements.h"
@@ -15,6 +15,6 @@ public:
 	void React(const Point click);
 
 private:
-	//порядок отрисовки
+	//РїРѕСЂСЏРґРѕРє РѕС‚СЂРёСЃРѕРІРєРё
 	std::list<Form*> forms_;
 };
