@@ -19,6 +19,19 @@ int Element::GetId() const {
 	return id_;
 }
 
+int Element::GetX() const {
+	return x_;
+}
+int Element::GetY() const {
+	return y_;
+}
+int Element::GetWidth() const {
+	return width_;
+}
+int Element::GetHeight() const {
+	return height_;
+}
+
 bool Element::CheckInside(const Point click) const {
 	if (!IsVisible()) {
 		return false;
@@ -52,7 +65,7 @@ string_view Form::GetName() const {
 void Form::OnClick() {
 	if (!is_active_) {
 		MakeActive();
-		print::FormAction(GetName(), GetId(), cerr);
+		//print::FormAction(GetName(), GetId(), cerr);
 	}
 }
 
@@ -145,4 +158,5 @@ string_view Edit::GetName() const {
 void Edit::OnClick() {
 	print::ElementAction(belongs_to_.GetName(), belongs_to_.GetId(), GetName(), GetId(), cout);
 }
+
 

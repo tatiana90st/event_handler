@@ -1,5 +1,9 @@
 ﻿#pragma once
 #include <list>
+#include <unordered_map>
+#include <map>
+#include <set>
+#include <algorithm>
 #include "common.h"
 #include "elements.h"
 
@@ -17,4 +21,5 @@ public:
 private:
 	//порядок отрисовки
 	std::list<Form*> forms_;
+
 };

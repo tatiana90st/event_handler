@@ -9,12 +9,13 @@ Form* EventHandler::AddForm(int x, int y, int width, int height) {
 	if (!forms_.empty()) {
 		forms_.front()->MakeUnactive();
 	}
-	forms_.push_front(form);
+	forms_.push_front(form);	
 	return form;
 }
 
 Form* EventHandler::DeleteForm() {
 	assert(!forms_.empty());
+	
 	forms_.pop_front();
 	if (!forms_.empty()) {
 		forms_.front()->MakeActive();
@@ -36,22 +37,24 @@ void EventHandler::React(const Point click) {
 				}
 				else {
 					//demo purposes
-					print::NothingHappened(click, cerr);
+					//print::NothingHappened(click, cerr);
 				}
 			}
 			else {
-				(*it)->OnClick(); //форма станет активной
-				forms_.front()->MakeUnactive(); //активная, наоборот, неактивной
-				forms_.push_front(*it); //поместим активную форму наверх списка
-				it = forms_.erase(it);//удалим активную из середины списка
+				(*it)->OnClick(); 
+				forms_.front()->MakeUnactive();
+				forms_.push_front(*it);
+				it = forms_.erase(it);
 			}
 			break;
 		}
 		++it;
+		/*
 		if (it == forms_.end()) {
 			//demo purposes
 			print::EmptySpace(click, cerr);
 		}
+		*/
 	}
 
 }

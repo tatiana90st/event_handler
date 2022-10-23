@@ -19,6 +19,11 @@ public:
 
 	int GetId() const;
 
+	int GetX() const;
+	int GetY() const;
+	int GetWidth() const;
+	int GetHeight() const;
+
 	bool CheckInside(const Point click) const;
 
 	bool IsVisible() const;
@@ -35,7 +40,6 @@ private:
 	int pivotY_ = 0;
 };
 
-//нужно ли форме наследовать от элемента? в принципе, не обязательно, но в этом примере так удобнее
 class Form : public Element {
 public:
 	Form(int x, int y, int width, int height);
@@ -58,11 +62,12 @@ public:
 	optional<Element*> CheckInsideElements(const Point click);
 	string_view GetTopElementType();
 
+	static int form_id_;
 private:
 	bool is_active_;
 	//list для порядка отрисовки
 	list<Element*> elements_on_form_;
-	static int form_id_;
+
 	int buttons_count_ = 0;
 	int images_count_ = 0;
 	int edits_count_ = 0;

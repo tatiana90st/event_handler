@@ -4,15 +4,16 @@
 #include <optional>
 #include <vector>
 #include <cassert>
+#include <random>
 #include "elements.h"
 #include "common.h"
 #include "event_handler.h"
+#include "log_duration.h"
 
 using namespace std;
 
-
 void TestClickForms() {
-	cout << "Test1"s << endl;
+	Form::form_id_ = 1;
 	EventHandler eh;
 	const int W = 10;
 	const int H = 20;
@@ -27,20 +28,43 @@ void TestClickForms() {
 	x = 46;
 	y = 109;
 	assert(forms[9]->IsActive());
-	assert(eh.GetFrontId() == forms.size()- 1 + forms[0]->GetId());
+	assert(eh.GetFrontId() == forms.size() - 1 + forms[0]->GetId());
 	for (int i = 9; i != -1; --i) {
 		Point click = { x,y };
-		cout << x <<" "s<< y << endl;
 		eh.React(click);
 		assert(forms[i]->IsActive());
 		assert(eh.GetFrontId() == forms[i]->GetId());
 		x -= 5;
 		y -= 10;
 	}
+}
 
+void TestFormsMult() {
+	LOG_DURATION("10 forms 1000 clicks"s); //7ms
+	Form::form_id_ = 1;
+	EventHandler eh;
+	const int W = 30;
+	const int H = 40;
+	int x_max = 100;
+	int y_max = 60;
+	mt19937 generator;
+	for (int i = 0; i < 10; ++i) {//10
+		int x = uniform_int_distribution(0, x_max)(generator);
+		int y = uniform_int_distribution(0, y_max)(generator);
+		eh.AddForm(x, y, W, H);
+	}
+	x_max += W;
+	y_max += H;
+	for (int i = 0; i != 1000; ++i) {
+		int x = uniform_int_distribution(0, x_max)(generator);
+		int y = uniform_int_distribution(0, y_max)(generator);
+		Point click = { x,y };
+		eh.React(click);
+	}
 }
 
 void TestElementsOnForm() {
+	Form::form_id_ = 1;
 	EventHandler eh;
 	const int W = 25;
 	const int H = 50;
@@ -63,6 +87,7 @@ void TestElementsOnForm() {
 
 
 void SmallDemoEventHadler() {
+	Form::form_id_ = 1;
 	cout << "Demonstration"s << endl;
 	EventHandler eh;
 	Form* form1 = eh.AddForm(0, 0, 20, 20);
@@ -78,30 +103,55 @@ void SmallDemoEventHadler() {
 	form4->AddButton(50, 5, 20, 20, true, 10, 50, 50);
 	form4->AddButton(50, 5, 20, 20, false, 10, 50, 50);
 
-	//could've created vector<Point> = {{..., ...}, ....}; right away, but doing this instead just for comments
-	Point click1 = { 90, 70 }; //nothing is there
-	Point click2 = { 40, 5 }; //form4 is there, but it is active, so nothing happens
-	Point click20 = { 55, 5 }; //form4 button0 is supposed to be there
-	Point click21 = { 50, 5 }; //form4 button0 is supposed to be there still
-	Point click3 = { 60, 15 }; //form 3 is active now
-	Point click4 = { 60, 15 }; //form3 image0
-	Point click5 = { 45, 5 }; // form4 is inactive now, form 3 is already active, so nothing happens
-	Point click50 = { 72, 12 }; //form4 button0
-	Point click6 = { 25, 10 }; //nothing is there
-	Point click7 = { -10, -10 }; //nothing is there
-	Point click8 = { 20, 20 }; //form 2 is active now
-	Point click9 = { 20, 20 }; //form 2 edit0
-	Point click10 = { 35, 55 }; //not even close to form 2 button1, so nothing
-	Point click11 = { 12, 15 }; //form 1
-	Point click12 = { 12, 15 }; //form 1 image0 is invisible so nothing happens
-	Point click13 = { 12, 8 }; // form1 button0
-	Point click14 = { 50, 10 }; // form3 is active
-
-	vector<Point> vec = { click1, click2, click20, click21, click3, click4, click5, click50, click6, click7, click8, click9, click10,
-	click11, click12, click13, click14 };
-	for (const Point p : vec) {
-		eh.React(p);
-	}
+	Point click = { 90, 70 }; //nothing is there
+	eh.React(click);
+	assert(form4->IsActive());
+	click = { 40, 5 }; //form4 is there, but it is active, so nothing happens
+	eh.React(click);
+	assert(form4->IsActive());
+	click = { 55, 5 }; //form4 button0 is supposed to be there
+	eh.React(click);
+	click = { 50, 5 }; //form4 button0 is supposed to be there still
+	eh.React(click);
+	click = { 60, 15 }; //form 3 is active now
+	eh.React(click);
+	assert(form3->IsActive());
+	click = { 60, 15 }; //form3 image0
+	eh.React(click);
+	click = { 45, 5 }; // form4 is inactive now, form 3 is already active, so nothing happens
+	eh.React(click);
+	assert(!form4->IsActive());
+	assert(form3->IsActive());
+	click = { 72, 12 }; //form3 button0
+	eh.React(click);
+	click = { 25, 10 }; //nothing is there
+	eh.React(click);
+	assert(form3->IsActive());
+	click = { -10, -10 }; //nothing is there
+	eh.React(click);
+	assert(form3->IsActive());
+	click = { 20, 20 }; //form 2 is active now
+	eh.React(click);
+	assert(!form3->IsActive());
+	assert(form2->IsActive());
+	click = { 20, 20 }; //form 2 edit0
+	eh.React(click);
+	click = { 35, 55 }; //not even close to form 2 button1, so nothing
+	eh.React(click);
+	assert(form2->IsActive());
+	click = { 12, 15 }; //form 1
+	eh.React(click);
+	assert(!form2->IsActive());
+	assert(form1->IsActive());
+	click = { 12, 15 }; //form 1 image0 is invisible so nothing happens
+	eh.React(click);
+	assert(form1->IsActive());
+	click = { 12, 8 }; // form1 button0
+	eh.React(click);
+	click = { 50, 10 }; // form3 is active
+	eh.React(click);
+	assert(!form1->IsActive());
+	assert(form3->IsActive());
 }
 
 void TestRotation() {
@@ -117,6 +167,7 @@ void TestRotation() {
 
 int main() {
 	TestClickForms();
+	TestFormsMult();
 	TestElementsOnForm();
 	TestRotation();
 	SmallDemoEventHadler();
